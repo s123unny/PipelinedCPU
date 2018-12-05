@@ -7,7 +7,6 @@ module ID_EX(
     MemRead_i  ,
     Mem2Reg_i  ,
     Branch_i   ,
-    ALUSrc_o   ,
     ALUOp_o    ,
     RegWrite_o ,
     MemWrite_o ,
@@ -24,7 +23,6 @@ module ID_EX(
     RDaddr_i   ,
     RSdata_o   ,
     RTdata_o   ,
-    imm_o      ,
     funct_o    ,
     RDaddr_o   ,
 
@@ -49,11 +47,10 @@ input       [31:0]      imm_i;
 input       [9:0]       funct_i;
 input       [4:0]       RDaddr_i;
 
-output reg  [31:0]       RSdata_i;
-output reg  [31:0]       RTdata_i;
-output reg  [31:0]      imm_i;
-output reg  [9:0]       funct_i;
-output reg  [4:0]       RDaddr_i;
+output reg  [31:0]       RSdata_o;
+output reg  [31:0]       RTdata_o;
+output reg  [9:0]       funct_o;
+output reg  [4:0]       RDaddr_o;
 
 input       [4:0]       RSaddr_i, RTaddr_i;
 output reg  [4:0]       RSaddr_o, RTaddr_o;
@@ -67,9 +64,13 @@ always @(posedge clk_i) begin
     Mem2Reg_o <= Mem2Reg_i;
     pc_o <= pc_i;
     RSdata_o <= RSdata_i;
-    RTdata_o <= RTdata_i;
-    imm_o <= imm_i;
-    funct_o <= funct_i;
+    if (ALU_Src_o) begin
+        RTdata_o <= imm_i;
+    end
+    else begin
+        RTdata_o <= RTdata_i;
+    end
+	funct_o <= funct_i;
     RDaddr_o <= RDaddr_o;
     Branch_o <= Branch_i;
     RSaddr_o <= RSaddr_i;
