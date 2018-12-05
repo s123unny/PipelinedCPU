@@ -22,14 +22,14 @@ always @( * ) begin
 	//lw stall
 	if (ID_EX_MemRead_i and ((ID_EX_RegisterRd_i == IF_ID_RS_i) or (ID_EX_RegisterRd_i == IF_ID_RT_i))) begin
 		//stall the pipeline, mux choose 0 rather than control
-		mux8_o = 1'b0
-		IF_ID_write_o = 1'b0
-		PC_write_o = 1'b0
+		mux8_o = 1'b0;
+		IF_ID_write_o = 1'b0;
+		PC_write_o = 1'b0;
 	end
 	else begin
-		mux8_o = 1'b1
-		IF_ID_write_o = 1'b1
-		PC_write_o = 1'b1	
+		mux8_o = 1'b1;
+		IF_ID_write_o = 1'b1;
+		PC_write_o = 1'b1;
 	end
 end
 

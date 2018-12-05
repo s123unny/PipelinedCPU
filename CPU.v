@@ -33,7 +33,8 @@ Control Control(
     .RegWrite_o (Control_RegWrite_o),
     .MemWrite_o (Control_MemWrite_o),
     .MemRead_o  (Control_MemRead_o),
-    .Mem2Reg_o  (Control_Mem2Reg_o)
+    .Mem2Reg_o  (Control_Mem2Reg_o),
+    .Branch_o   (Control_Branch_o)
 );
 
 wire [31:0]  IF_ID_pc_o;
@@ -41,6 +42,7 @@ IF_ID IF_ID(
     .clk_i      (clk_i),
     .pc_i       (instruction_addr),
     .instr_i    (instruction),
+    .flush_i    (Branch_data_o),
     .pc_o       (IF_ID_pc_o),
     .instr_o    (IF_ID_instruction)
 );
@@ -144,8 +146,9 @@ Adder Add_imm(
 
 wire Branch_data_o;
 Branch Branch(
-    .data1_in	(EX_MEM_Zero_o),
-    .data2_in	(EX_MEM_Branch_o),
+    .data1_in	(Registers_RSdata_o),
+    .data2_in	(Registers_RTdata_o),
+    .branch_i   (Control_Branch_o),
     .data_o	    (Branch_data_o)
 );
 
@@ -259,7 +262,7 @@ HazzardDetection HazzardDetection(
 );
 
 MUX8 MUX8(
-    .data2_i	({Control_ALUOp_o, Control_ALU_Src_o, Control_RegWrite_o, Control_MemWrite_o, Control_MemRead_o, Control_Mem2Reg_o}),
+    .data2_i	({Control_ALUOp_o, Control_ALU_Src_o, Control_RegWrite_o, Control_MemWrite_o, Control_MemRead_o, Control_Mem2Reg_o, Control_Branch_o}),
     .select_i	(HazzardDetection_mux8_o),
     .data_o	    (MUX8_data_o)
 );
