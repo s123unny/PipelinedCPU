@@ -14,8 +14,6 @@ module ID_EX(
     Mem2Reg_o  ,
     Branch_o   ,
 
-    pc_i       ,
-    pc_o       ,
     RSdata_i   ,
     RTdata_i   ,
     imm_i      ,
@@ -62,7 +60,6 @@ always @(posedge clk_i) begin
     MemWrite_o <= MemWrite_i; 
     MemRead_o <= MemRead_i; 
     Mem2Reg_o <= Mem2Reg_i;
-    pc_o <= pc_i;
     RSdata_o <= RSdata_i;
     if (ALU_Src_o) begin
         RTdata_o <= imm_i;
