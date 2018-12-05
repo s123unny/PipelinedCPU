@@ -1,5 +1,4 @@
 module Data_Memory(
-	clk_i,
 	data_i,
 	MemWr_i,
 	MemRe_i,
@@ -7,7 +6,6 @@ module Data_Memory(
 	data_o
 );
 
-input       		clk_i;
 input 	[31:0] 		data_i;
 input 				MemWr_i, MemRe_i;
 input	[31:0]		Adr_i;
@@ -15,7 +13,7 @@ output reg [31:0]	data_o;
 
 reg 	[7:0]		memory 	[31:0];
 
-always @(posedge clk_i) begin
+always @(data_i or MemWr_i or MemRe_i) begin
 	if (MemWr_i) begin
 		//write data_i to Adr_i
 		memory[Adr_i+3] = data_i[31:24];

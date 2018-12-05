@@ -1,6 +1,5 @@
 module Registers
 (
-    clk_i,
     RSaddr_i,
     RTaddr_i,
     RDaddr_i, 
@@ -11,7 +10,6 @@ module Registers
 );
 
 // Ports
-input               clk_i;
 input   [4:0]       RSaddr_i;
 input   [4:0]       RTaddr_i;
 input   [4:0]       RDaddr_i;
@@ -28,7 +26,7 @@ assign  RSdata_o = register[RSaddr_i];
 assign  RTdata_o = register[RTaddr_i];
 
 // Write Data   
-always@(posedge clk_i) begin
+always@(RegWrite_i) begin
     if(RegWrite_i)
         register[RDaddr_i] <= RDdata_i;
 end
