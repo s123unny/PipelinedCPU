@@ -32,9 +32,9 @@ module ID_EX(
 
 input                   clk_i;
 input       [1:0]       ALUOp_i;
-input ALU_Src_i, RegWrite_i, MemWrite_i, MemRead_i, Mem2Reg_i, Branch_i;
+input ALUSrc_i, RegWrite_i, MemWrite_i, MemRead_i, Mem2Reg_i, Branch_i;
 output reg  [1:0]       ALUOp_o;
-output reg ALU_Src_o, RegWrite_o, MemWrite_o, MemRead_o, Mem2Reg_o, Branch_o;
+output reg  RegWrite_o, MemWrite_o, MemRead_o, Mem2Reg_o, Branch_o;
 
 input       [31:0]      pc_i;
 output reg  [31:0]      pc_o;
@@ -55,13 +55,12 @@ output reg  [4:0]       RSaddr_o, RTaddr_o;
 
 always @(posedge clk_i) begin
     ALUOp_o <= ALUOp_i;
-    ALU_Src_o <= ALU_Src_i;
     RegWrite_o <= RegWrite_i; 
     MemWrite_o <= MemWrite_i; 
     MemRead_o <= MemRead_i; 
     Mem2Reg_o <= Mem2Reg_i;
     RSdata_o <= RSdata_i;
-    if (ALU_Src_o) begin
+    if (ALUSrc_i) begin
         RTdata_o <= imm_i;
     end
     else begin
