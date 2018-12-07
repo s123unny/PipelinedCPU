@@ -42,7 +42,8 @@ IF_ID IF_ID(
     .clk_i      (clk_i),
     .pc_i       (instruction_addr),
     .instr_i    (instruction),
-    .flush_i    (Branch_data_o),
+    .branch_i   (HD_mux8_o)
+    .flush_i    (HD_flush_o),
     .pc_o       (IF_ID_pc_o),
     .instr_o    (IF_ID_instruction)
 );
@@ -94,12 +95,10 @@ EX_MEM EX_MEM(
     .MemWrite_i (ID_EX_MemWrite_o),
     .MemRead_i  (ID_EX_MemRead_o),
     .Mem2Reg_i  (ID_EX_Mem2Reg_o),
-	.Branch_i   (ID_EX_Branch_o),
     .RegWrite_o (EX_MEM_RegWrite_o),
     .MemWrite_o (EX_MEM_MemWrite_o),
     .MemRead_o  (EX_MEM_MemRead_o),
     .Mem2Reg_o  (EX_MEM_Mem2Reg_o),
-	.Branch_o   (EX_MEM_Branch_o),
 
     .Zero_i     (ALU_zero_o),
     .ALU_data_i (ALU_data_o),
@@ -156,6 +155,7 @@ PC PC(
     .clk_i      (clk_i),
     .rst_i      (rst_i),
     .start_i    (start_i),
+    .stall_i    (HD_mux8_o),
     .pc_i       (MUX_PCSrc_data_o),
     .pc_o       (instruction_addr)
 );
@@ -247,23 +247,24 @@ Forwarding_Unit Forwarding_Unit(
     .ForwardB_o          (FU_ForwardB_o)
 );
 
-wire HazzardDetection_mux8_o;
-wire HazzardDetection_IF_ID_write_o;
-wire HazzardDetection_PC_write_o;
+wire HD_mux8_o;
+wire HD_flush_o;
 HazzardDetection HazzardDetection(
     .ID_EX_MemWrite_i	(ID_EX_MemWrite_o),
     .ID_EX_MemRead_i	(ID_EX_MemRead_o),
     .ID_EX_RegisterRd_i	(ID_EX_RegisterRd_o),
-    .IF_ID_RS_i	(IF_ID_instruction[19:15]),
-    .IF_ID_RT_i	(IF_ID_instruction[24:20]),
-    .mux8_o     (HazzardDetection_mux8_o),
-    .IF_ID_write_o	(HazzardDetection_IF_ID_write_o),
-    .PC_write_o    (HazzardDetection_PC_write_o)
+    .IF_ID_RS_i	        (IF_ID_instruction[19:15]),
+    .IF_ID_RT_i	        (IF_ID_instruction[24:20]),
+    .Registers_RSdata_i (Registers_RSdata_o),
+    .Registers_RTdata_i (Registers_RTdata_o),
+    .branch_i           (Control_Branch_o),
+    .mux8_o             (HD_mux8_o),
+    .flush_o            (HD_flush_o)
 );
 
 MUX8 MUX8(
     .data2_i	({Control_ALUOp_o, Control_ALU_Src_o, Control_RegWrite_o, Control_MemWrite_o, Control_MemRead_o, Control_Mem2Reg_o, Control_Branch_o}),
-    .select_i	(HazzardDetection_mux8_o),
+    .select_i	(HD_mux8_o),
     .data_o	    (MUX8_data_o)
 );
 

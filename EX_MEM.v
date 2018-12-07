@@ -4,12 +4,10 @@ module EX_MEM(
     MemWrite_i ,
     MemRead_i  ,
     Mem2Reg_i  ,
-    Branch_i   ,
     RegWrite_o ,
     MemWrite_o ,
     MemRead_o  ,
     Mem2Reg_o  ,
-    Branch_o   ,
 
     Zero_i     ,
     ALU_data_i ,
@@ -22,8 +20,8 @@ module EX_MEM(
 );
 
 input clk_i;
-input RegWrite_i, MemWrite_i, MemRead_i, Mem2Reg_i, Branch_i;
-output reg RegWrite_o, MemWrite_o, MemRead_o, Mem2Reg_o, Branch_o;
+input RegWrite_i, MemWrite_i, MemRead_i, Mem2Reg_i;
+output reg RegWrite_o, MemWrite_o, MemRead_o, Mem2Reg_o;
 
 input                 Zero_i;
 input       [31:0]    ALU_data_i, writeData_i;
@@ -43,6 +41,5 @@ always @(posedge clk_i) begin
     ALU_data_o = ALU_data_i;
     writeData_o = writeData_i;
     RDaddr_o = RDaddr_i;
-    Branch_o = Branch_i;
 end
 endmodule
