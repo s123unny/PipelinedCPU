@@ -44,7 +44,7 @@ IF_ID IF_ID(
     .clk_i      (clk_i),
     .pc_i       (instruction_addr),
     .instr_i    (instruction),
-    .branch_i   (HD_mux8_o),
+    .stall_i    (HD_mux8_o),
     .flush_i    (HD_flush_o),
     .pc_o       (IF_ID_pc_o),
     .instr_o    (IF_ID_instruction)

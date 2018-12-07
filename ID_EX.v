@@ -67,7 +67,7 @@ always @(posedge clk_i) begin
         RTdata_o <= RTdata_i;
     end
 	funct_o <= funct_i;
-    RDaddr_o <= RDaddr_o;
+    RDaddr_o <= RDaddr_i;
     Branch_o <= Branch_i;
     RSaddr_o <= RSaddr_i;
     RTaddr_o <= RTaddr_i;
