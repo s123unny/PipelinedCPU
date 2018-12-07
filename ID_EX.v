@@ -60,7 +60,7 @@ always @(posedge clk_i) begin
     MemRead_o <= MemRead_i; 
     Mem2Reg_o <= Mem2Reg_i;
     RSdata_o <= RSdata_i;
-    if (ALUSrc_i) begin
+    if (ALUSrc_i == 1'b1) begin
         RTdata_o <= imm_i;
     end
     else begin
@@ -71,5 +71,6 @@ always @(posedge clk_i) begin
     Branch_o <= Branch_i;
     RSaddr_o <= RSaddr_i;
     RTaddr_o <= RTaddr_i;
+	
 end
 endmodule

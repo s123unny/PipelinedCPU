@@ -13,7 +13,7 @@ output reg [31:0]	data_o;
 
 reg 	[7:0]		memory 	[31:0];
 
-always @(data_i or MemWr_i or MemRe_i) begin
+always @(data_i or MemWr_i or MemRe_i or Adr_i) begin
 	if (MemWr_i) begin
 		//write data_i to Adr_i
 		memory[Adr_i+3] = data_i[31:24];

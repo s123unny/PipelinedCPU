@@ -57,7 +57,7 @@ initial begin
 end
   
 always@(posedge Clk) begin
-    if(counter == 30)    // stop after 30 cycles
+    if(counter == 10)    // stop after 30 cycles
         $stop;
 
     // put in your own signal to count stall and flush
@@ -87,10 +87,31 @@ always@(posedge Clk) begin
     $fdisplay(outfile, "Data Memory: 0x14 = %d", {CPU.Data_Memory.memory[23], CPU.Data_Memory.memory[22], CPU.Data_Memory.memory[21], CPU.Data_Memory.memory[20]});
     $fdisplay(outfile, "Data Memory: 0x18 = %d", {CPU.Data_Memory.memory[27], CPU.Data_Memory.memory[26], CPU.Data_Memory.memory[25], CPU.Data_Memory.memory[24]});
     $fdisplay(outfile, "Data Memory: 0x1c = %d", {CPU.Data_Memory.memory[31], CPU.Data_Memory.memory[30], CPU.Data_Memory.memory[29], CPU.Data_Memory.memory[28]});
+
+	$fdisplay(outfile, "ID/EX: RSdata_o=%d, RTdata_o=%d, RDaddr_o=%d", CPU.ID_EX.RSdata_o, CPU.ID_EX.RTdata_o, CPU.ID_EX.RDaddr_o);
+	$fdisplay(outfile, "mux8: %h", CPU.MUX8.data_o);
+	$fdisplay(outfile, "ALUOp_o=%d, ALUSrc_o=%d, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d, Mem2Reg_o=%d, Branch_o=%d", CPU.Control.ALUOp_o, CPU.Control.ALUSrc_o, CPU.Control.RegWrite_o, CPU.Control.MemWrite_o, CPU.Control.MemRead_o, CPU.Control.Mem2Reg_o, CPU.Control.Branch_o);
 	
     $fdisplay(outfile, "\n");
-    
-    counter = counter + 1;
+
+	$display("cycle %d", counter);
+	$display("[IF_ID]: pc_i=%d, instr_i=%b", CPU.IF_ID.pc_i, CPU.IF_ID.instr_i);
+    $display("[IF_ID]: pc_o=%d, instr_o=%b", CPU.IF_ID.pc_o, CPU.IF_ID.instr_o);
+    $display("[Registers]: RSaddr_i=%d, RTaddr_i=%d, RDaddr_i=%d, RDdata_i=%d, RegWrite_i=%d, RSdata_o=%d, RTdata_o=%d",CPU.Registers.RSaddr_i, CPU.Registers.RTaddr_i, CPU.Registers.RDaddr_i, CPU.Registers.RDdata_i, CPU.Registers.RegWrite_i, CPU.Registers.RSdata_o, CPU.Registers.RTdata_o);
+    $display("[ALU_Control]: funct_i=%b, ALUOp_i=%b, ALUCtrl_o=%b", CPU.ALU_Control.funct_i, CPU.ALU_Control.ALUOp_i, CPU.ALU_Control.ALUCtrl_o);
+    $display("[ID_EX]: ALUOp_i=%b, ALUSrc_i=%d, RegWrite_i=%d, MemWrite_i=%d, MemRead_i=%d", CPU.ID_EX.ALUOp_i, CPU.ID_EX.ALUSrc_i, CPU.ID_EX.RegWrite_i, CPU.ID_EX.MemWrite_i, CPU.ID_EX.MemRead_i);
+    $display("[ID_EX]: RSdata_i=%d, RTdata_i=%d, RSaddr_i=%d, RTaddr_i=%d, RDaddr_i=%d, imm_i=%d", CPU.ID_EX.RSdata_i, CPU.ID_EX.RTdata_i, CPU.ID_EX.RSaddr_i, CPU.ID_EX.RTaddr_i, CPU.ID_EX.RDaddr_i, CPU.ID_EX.imm_i);
+    $display("[ID_EX]: ALUOp_o=%b, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d", CPU.ID_EX.ALUOp_o, CPU.ID_EX.RegWrite_o, CPU.ID_EX.MemWrite_o, CPU.ID_EX.MemRead_o);
+    $display("[ID_EX]: RSdata_o=%d, RTdata_o=%d, RSaddr_o=%d, RTaddr_o=%d, RDaddr_o=%d", CPU.ID_EX.RSdata_o, CPU.ID_EX.RTdata_o, CPU.ID_EX.RSaddr_o, CPU.ID_EX.RTaddr_o, CPU.ID_EX.RDaddr_o);
+	$display("[MUX_ALUSrcA]: select_i=%d, data_o=%d", CPU.MUX_ALUSrcA.select_i, CPU.MUX_ALUSrcA.data_o);
+    $display("[MUX_ALUSrcB]: select_i=%d, data_o=%d", CPU.MUX_ALUSrcB.select_i, CPU.MUX_ALUSrcB.data_o);
+	$display("[ALU]: data1_i=%d, data2_i=%d, ALUCtrl_i=%b, data_o=%d, Zero_o=%d", CPU.ALU.data1_i, CPU.ALU.data2_i, CPU.ALU.ALUCtrl_i, CPU.ALU.data_o, CPU.ALU.Zero_o);
+	$display("[EX_MEM]: ALU_data_i=%d, writeData_i=%d, RDaddr_i=%d, RegWrite_i=%d, MemWrite_i=%d, MemRead_i=%d", CPU.EX_MEM.ALU_data_i, CPU.EX_MEM.writeData_i, CPU.EX_MEM.RDaddr_i, CPU.EX_MEM.RegWrite_i, CPU.EX_MEM.MemWrite_i, CPU.EX_MEM.MemRead_i);
+    $display("[EX_MEM]: ALU_data_o=%d, writeData_o=%d, RDaddr_o=%d, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d,", CPU.EX_MEM.ALU_data_o, CPU.EX_MEM.writeData_o, CPU.EX_MEM.RDaddr_o, CPU.EX_MEM.RegWrite_o, CPU.EX_MEM.MemWrite_o, CPU.EX_MEM.MemRead_o);
+	$display("[MEM_WB]: RDaddr_i=%d, RegWrite_i=%d, ReadData_i=%d, ALU_data_o=%d", CPU.MEM_WB.RDaddr_i, CPU.MEM_WB.RegWrite_i, CPU.MEM_WB.ReadData_i, CPU.MEM_WB.ALU_data_i);
+    $display("[MEM_WB]: RDaddr_o=%d, RegWrite_o=%d, ReadData_o=%d, ALU_data_o=%d", CPU.MEM_WB.RDaddr_o, CPU.MEM_WB.RegWrite_o, CPU.MEM_WB.ReadData_o, CPU.MEM_WB.ALU_data_o);
+	$display("\n");
+	counter = counter + 1;
     
       
 end

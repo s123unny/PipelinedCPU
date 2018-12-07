@@ -26,7 +26,6 @@ wire [31:0] IF_ID_instruction;
 wire [7:0]  MUX8_data_o;
 
 Control Control(
-    .clk_i      (clk_i),
     .Op_i       (IF_ID_instruction[6:0]),
     .ALUOp_o    (Control_ALUOp_o),
     .ALUSrc_o   (Control_ALU_Src_o),
@@ -50,6 +49,7 @@ IF_ID IF_ID(
     .instr_o    (IF_ID_instruction)
 );
 
+wire [31:0] Sign_Extend_data_o;
 wire [31:0] ID_EX_RSdata_o, ID_EX_RTdata_o, ID_EX_imm_o;
 wire [4:0]  ID_EX_RSaddr_o, ID_EX_RTaddr_o;
 wire [9:0]  ID_EX_funct_o;
@@ -72,6 +72,7 @@ ID_EX ID_EX(
 
     .RSdata_i   (Registers_RSdata_o),
     .RTdata_i   (Registers_RTdata_o),
+	.imm_i		(Sign_Extend_data_o),
     .funct_i    ({IF_ID_instruction[31:25], IF_ID_instruction[14:12]}),
     .RDaddr_i   (IF_ID_instruction[11:7]),
     .RSdata_o   (ID_EX_RSdata_o),
@@ -136,7 +137,6 @@ Adder Add_PC(
     .data_o     (Add_PC_data_o)
 );
 
-wire [31:0] Sign_Extend_data_o;
 wire [31:0] Add_imm_data_o;
 Adder Add_imm(
    .data1_in	(Sign_Extend_data_o << 1),

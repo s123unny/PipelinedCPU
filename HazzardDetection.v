@@ -25,18 +25,18 @@ always @( * ) begin
 	//lw stall
 	if (ID_EX_MemRead_i && ((ID_EX_RegisterRd_i == IF_ID_RS_i) || (ID_EX_RegisterRd_i == IF_ID_RT_i))) begin
 		//stall the pipeline, mux choose 0 rather than control
-		mux8_o = 1'b0;
+		mux8_o <= 1'b1;
 	end
 	else begin
-		mux8_o = 1'b1;
+		mux8_o <= 1'b0;
 	end
 
 	//flush
 	if (branch_i && Registers_RSdata_i == Registers_RTdata_i) begin
-		flush_o = 1'b1;
+		flush_o <= 1'b1;
 	end
 	else begin
-		flush_o = 1'b0;
+		flush_o <= 1'b0;
 	end
 end
 

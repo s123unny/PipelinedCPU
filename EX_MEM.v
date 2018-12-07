@@ -33,13 +33,13 @@ output reg  [4:0]     RDaddr_o;
 
 
 always @(posedge clk_i) begin
-    RegWrite_o = RegWrite_i; 
-    MemWrite_o = MemWrite_i; 
-    MemRead_o = MemRead_i; 
-    Mem2Reg_o = Mem2Reg_i;
-    Zero_o = Zero_i;
-    ALU_data_o = ALU_data_i;
-    writeData_o = writeData_i;
-    RDaddr_o = RDaddr_i;
+    RegWrite_o <= RegWrite_i; 
+    MemWrite_o <= MemWrite_i; 
+    MemRead_o <= MemRead_i; 
+    Mem2Reg_o <= Mem2Reg_i;
+    Zero_o <= Zero_i;
+    ALU_data_o <= ALU_data_i;
+    writeData_o <= writeData_i;
+    RDaddr_o <= RDaddr_i;
 end
 endmodule
