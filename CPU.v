@@ -202,7 +202,7 @@ MUX32 MUX_ALUSrcB(
 );
 
 Sign_Extend Sign_Extend(
-    .data_i     (IF_ID_instruction[31:20]),
+    .instruction(IF_ID_instruction),
     .data_o     (Sign_Extend_data_o)
 );
 
