@@ -165,6 +165,7 @@ Instruction_Memory Instruction_Memory(
 
 wire [31:0] MUX_RegDst_data_o;
 Registers Registers(
+	.clk_i		(clk_i),
     .RSaddr_i   (IF_ID_instruction[19:15]),
     .RTaddr_i   (IF_ID_instruction[24:20]),
     .RDaddr_i   (MEM_WB_RDaddr_o), 
@@ -232,6 +233,7 @@ ALU_Control ALU_Control(
 );
 
 Data_Memory Data_Memory(
+	//.clk_i		(clk_i),
 	.data_i     (EX_MEM_writeData_o),
     .MemWr_i    (EX_MEM_MemWrite_o),
     .MemRe_i    (EX_MEM_MemRead_o),

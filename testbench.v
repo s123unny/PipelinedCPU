@@ -46,11 +46,11 @@ initial begin
     CPU.Data_Memory.memory[0] = 8'h5;       // n = 5 for example
     
     Clk = 1;
-    Reset = 0;
+    //Reset = 0;
     Start = 0;
     
     #(`CYCLE_TIME/4) 
-    Reset = 1;
+    //Reset = 1;
     Start = 1;
         
     
