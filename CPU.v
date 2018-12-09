@@ -142,7 +142,7 @@ Adder Add_PC(
 
 wire [31:0] Add_imm_data_o;
 Adder Add_imm(
-   .data1_in	(Sign_Extend_data_o << 1),
+   .data1_in	(Sign_Extend_data_o << 2),
    .data2_in	(IF_ID_instruction),
    .data_o	    (Add_imm_data_o)
 );
@@ -182,9 +182,9 @@ MUX5 MUX_RegDst(
 );
 
 MUX5 MUX_PCSrc(
-    .data1_i    (Add_imm_data_o),
-    .data2_i    (Add_PC_data_o),
-    .select_i   (Branch_data_o),
+    .data1_i    (Add_PC_data_o),
+    .data2_i    (Add_imm_data_o),
+    .select_i   (HD_flush_o),
     .data_o     (MUX_PCSrc_data_o)
 );
 
