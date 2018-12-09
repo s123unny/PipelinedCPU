@@ -46,17 +46,15 @@ always @(Op_i) begin
 		Mem2Reg_o <= 1'b0;
 		Branch_o <= 1'b0;
 	end
-  /*
-  else if (Op_i == 7'b0000000) begin //test
-		ALUOp_o <= 2'b11;
+	else if (Op_i == 7'b0000000) begin //no instruction
+		ALUOp_o <= 2'b00;
 		ALUSrc_o <= 1'b1;
-		RegWrite_o <= 1'b1;
-		MemWrite_o <= 1'b1;
-		MemRead_o <= 1'b1;
-		Mem2Reg_o <= 1'b1;
-		Branch_o <= 1'b1;
+		RegWrite_o <= 1'b0;
+		MemWrite_o <= 1'b0;
+		MemRead_o <= 1'b0;
+		Mem2Reg_o <= 1'b0;
+		Branch_o <= 1'b0;
 	end
-  */
 	else begin //sw lw
 		ALUOp_o <= 2'b00;
 		ALUSrc_o <= 1'b1;

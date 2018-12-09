@@ -88,19 +88,18 @@ always@(posedge Clk) begin
     $fdisplay(outfile, "Data Memory: 0x18 = %d", {CPU.Data_Memory.memory[27], CPU.Data_Memory.memory[26], CPU.Data_Memory.memory[25], CPU.Data_Memory.memory[24]});
     $fdisplay(outfile, "Data Memory: 0x1c = %d", {CPU.Data_Memory.memory[31], CPU.Data_Memory.memory[30], CPU.Data_Memory.memory[29], CPU.Data_Memory.memory[28]});
 
-	$fdisplay(outfile, "ID/EX: RSdata_o=%d, RTdata_o=%d, RDaddr_o=%d", CPU.ID_EX.RSdata_o, CPU.ID_EX.RTdata_o, CPU.ID_EX.RDaddr_o);
-	$fdisplay(outfile, "mux8: %h", CPU.MUX8.data_o);
-	$fdisplay(outfile, "ALUOp_o=%d, ALUSrc_o=%d, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d, Mem2Reg_o=%d, Branch_o=%d", CPU.Control.ALUOp_o, CPU.Control.ALUSrc_o, CPU.Control.RegWrite_o, CPU.Control.MemWrite_o, CPU.Control.MemRead_o, CPU.Control.Mem2Reg_o, CPU.Control.Branch_o);
 	
     $fdisplay(outfile, "\n");
 
 	$display("cycle %d", counter);
     $display("[IF_ID]: pc_i=%d, instr_i=%b, flush_i=%d", CPU.IF_ID.pc_i, CPU.IF_ID.instr_i, CPU.IF_ID.flush_i);
 	$display("[IF_ID]: pc_o=%d, instr_o=%b", CPU.IF_ID.pc_o, CPU.IF_ID.instr_o);
+	$display("[Control]: ALUOp_o=%d, ALUSrc_o=%d, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d, Mem2Reg_o=%d, Branch_o=%d", CPU.Control.ALUOp_o, CPU.Control.ALUSrc_o, CPU.Control.RegWrite_o, CPU.Control.MemWrite_o, CPU.Control.MemRead_o, CPU.Control.Mem2Reg_o, CPU.Control.Branch_o);
     $display("[Registers]: RSaddr_i=%d, RTaddr_i=%d, RDaddr_i=%d, RDdata_i=%d, RegWrite_i=%d, RSdata_o=%d, RTdata_o=%d",CPU.Registers.RSaddr_i, CPU.Registers.RTaddr_i, CPU.Registers.RDaddr_i, CPU.Registers.RDdata_i, CPU.Registers.RegWrite_i, CPU.Registers.RSdata_o, CPU.Registers.RTdata_o);
     $display("[ALU_Control]: funct_i=%b, ALUOp_i=%b, ALUCtrl_o=%b", CPU.ALU_Control.funct_i, CPU.ALU_Control.ALUOp_i, CPU.ALU_Control.ALUCtrl_o);
 	$display("[Sign_Extend]: data_o=%b", CPU.Sign_Extend.data_o);
-	 $display("[Add imm]: data1_in=%b, data_o=%b", CPU.Add_imm.data1_in, CPU.Add_imm.data_o);
+	$display("[Add imm]: data1_in=%b, data_o=%b", CPU.Add_imm.data1_in, CPU.Add_imm.data_o);
+	$display("[mux8]: %h", CPU.MUX8.data_o);
     $display("[ID_EX]: ALUOp_i=%b, ALUSrc_i=%d, RegWrite_i=%d, MemWrite_i=%d, MemRead_i=%d", CPU.ID_EX.ALUOp_i, CPU.ID_EX.ALUSrc_i, CPU.ID_EX.RegWrite_i, CPU.ID_EX.MemWrite_i, CPU.ID_EX.MemRead_i);
     $display("[ID_EX]: RSdata_i=%d, RTdata_i=%d, RSaddr_i=%d, RTaddr_i=%d, RDaddr_i=%d, imm_i=%d", CPU.ID_EX.RSdata_i, CPU.ID_EX.RTdata_i, CPU.ID_EX.RSaddr_i, CPU.ID_EX.RTaddr_i, CPU.ID_EX.RDaddr_i, CPU.ID_EX.imm_i);
     $display("[ID_EX]: ALUOp_o=%b, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d", CPU.ID_EX.ALUOp_o, CPU.ID_EX.RegWrite_o, CPU.ID_EX.MemWrite_o, CPU.ID_EX.MemRead_o);

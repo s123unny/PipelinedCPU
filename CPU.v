@@ -142,8 +142,8 @@ Adder Add_PC(
 
 wire [31:0] Add_imm_data_o;
 Adder Add_imm(
-   .data1_in	(Sign_Extend_data_o << 2),
-   .data2_in	(IF_ID_instruction),
+   .data1_in	(Sign_Extend_data_o << 1),
+   .data2_in	(IF_ID_pc_o),
    .data_o	    (Add_imm_data_o)
 );
 
