@@ -13,7 +13,7 @@ input               start_i;
 wire [31:0] instruction;
 wire [31:0] instruction_addr;
 wire Control_ALU_Src_o, Control_RegWrite_o, Control_MemWrite_o, Control_MemRead_o, Control_Mem2Reg_o, Control_Branch_o;
-wire ID_EX_RegWrite_o, ID_EX_MemWrite_o, ID_EX_MemRead_o, ID_EX_Mem2Reg_o, ID_EX_Branch_o;
+wire ID_EX_ALUSrc_o, ID_EX_RegWrite_o, ID_EX_MemWrite_o, ID_EX_MemRead_o, ID_EX_Mem2Reg_o, ID_EX_Branch_o;
 wire EX_MEM_RegWrite_o, EX_MEM_MemWrite_o, EX_MEM_MemRead_o, EX_MEM_Mem2Reg_o, EX_MEM_Branch_o;
 wire MEM_WB_MemWrite_o, MEM_WB_MemRead_o;
 wire [1:0] Control_ALUOp_o;
@@ -64,6 +64,7 @@ ID_EX ID_EX(
     .Mem2Reg_i  (MUX8_data_o[1]),
 	.Branch_i   (MUX8_data_o[0]),
     .ALUOp_o    (ID_EX_ALUOp_o),
+    .ALUSrc_o   (ID_EX_ALUSrc_o),
     .RegWrite_o (ID_EX_RegWrite_o),
     .MemWrite_o (ID_EX_MemWrite_o),
     .MemRead_o  (ID_EX_MemRead_o),
@@ -77,6 +78,7 @@ ID_EX ID_EX(
     .RDaddr_i   (IF_ID_instruction[11:7]),
     .RSdata_o   (ID_EX_RSdata_o),
     .RTdata_o   (ID_EX_RTdata_o),
+    .imm_o      (ID_EX_imm_o),
     .funct_o    (ID_EX_funct_o),
     .RDaddr_o   (ID_EX_RDaddr_o),
 
@@ -90,6 +92,7 @@ wire [31:0] EX_MEM_ALU_data_o;
 wire EX_MEM_Zero_o;
 wire [31:0] EX_MEM_writeData_o;
 wire [4:0]  EX_MEM_RDaddr_o;
+wire [31:0]  MUX_ALUSrc_data_o;
 EX_MEM EX_MEM(
     .clk_i      (clk_i),
     .RegWrite_i (ID_EX_RegWrite_o),
@@ -185,6 +188,13 @@ MUX5 MUX_PCSrc(
     .data_o     (MUX_PCSrc_data_o)
 );
 
+MUX5 MUX_ALUSrc(
+    .data1_i    (MUX_ALUSrcB_data_o),
+    .data2_i    (ID_EX_imm_o),
+    .select_i   (ID_EX_ALUSrc_o),
+    .data_o     (MUX_ALUSrc_data_o)
+);
+
 MUX32 MUX_ALUSrcA(
     .data1_i    (ID_EX_RSdata_o),
     .data2_i    (MUX_RegDst_data_o),
@@ -209,7 +219,7 @@ Sign_Extend Sign_Extend(
 wire [2:0] ALU_Control_ALUCtrl_o;
 ALU ALU(
     .data1_i    (MUX_ALUSrcA_data_o),
-    .data2_i    (MUX_ALUSrcB_data_o),
+    .data2_i    (MUX_ALUSrc_data_o),
     .ALUCtrl_i  (ALU_Control_ALUCtrl_o),
     .data_o     (ALU_data_o),
     .Zero_o     (ALU_zero_o)
