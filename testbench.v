@@ -37,7 +37,7 @@ initial begin
     end
     
     // Load instructions into instruction memory
-    $readmemb("instruction.txt", CPU.Instruction_Memory.memory);
+    $readmemb("Fibonacci_instruction.txt", CPU.Instruction_Memory.memory);
     
     // Open output file
     outfile = $fopen("output.txt") | 1;
@@ -57,7 +57,7 @@ initial begin
 end
   
 always@(posedge Clk) begin
-    if(counter == 30)    // stop after 30 cycles
+    if(counter == 100)    // stop after 30 cycles
         $stop;
 
     // put in your own signal to count stall and flush
