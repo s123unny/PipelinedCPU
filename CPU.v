@@ -2,7 +2,14 @@ module CPU
 (
     clk_i, 
     rst_i,
-    start_i
+    start_i,
+
+    mem_data_i, 
+    mem_ack_i,  
+    mem_data_o, 
+    mem_addr_o,     
+    mem_enable_o, 
+    mem_write_o
 );
 
 // Ports
@@ -10,6 +17,17 @@ input               clk_i;
 input               rst_i;
 input               start_i;
 
+//
+// to Data Memory interface     
+//
+input   [256-1:0]   mem_data_i; 
+input               mem_ack_i;  
+output  [256-1:0]   mem_data_o; 
+output  [32-1:0]    mem_addr_o;     
+output              mem_enable_o; 
+output              mem_write_o; 
+
+//pj1
 wire [31:0] instruction;
 wire [31:0] instruction_addr;
 wire Control_ALU_Src_o, Control_RegWrite_o, Control_MemWrite_o, Control_MemRead_o, Control_Mem2Reg_o, Control_Branch_o;
@@ -24,6 +42,8 @@ wire [31:0] MUX_ALUSrcA_data_o, MUX_ALUSrcB_data_o, ALU_data_o;
 wire [1:0] FU_ForwardA_o, FU_ForwardB_o;
 wire [31:0] IF_ID_instruction;
 wire [7:0]  MUX8_data_o;
+
+wire dcache_stall;
 
 Control Control(
     .Op_i       (IF_ID_instruction[6:0]),
@@ -154,6 +174,7 @@ PC PC(
     .rst_i      (rst_i),
     .start_i    (start_i),
     .stall_i    (HD_mux8_o),
+    .pcEnable_i (dcache_stall),
     .pc_i       (MUX_PCSrc_data_o),
     .pc_o       (instruction_addr)
 );
@@ -232,14 +253,14 @@ ALU_Control ALU_Control(
     .ALUCtrl_o  (ALU_Control_ALUCtrl_o)
 );
 
-Data_Memory Data_Memory(
-	//.clk_i		(clk_i),
-	.data_i     (EX_MEM_writeData_o),
-    .MemWr_i    (EX_MEM_MemWrite_o),
-    .MemRe_i    (EX_MEM_MemRead_o),
-    .Adr_i      (EX_MEM_ALU_data_o),
-    .data_o     (Data_Memory_data_o)
-);
+// Data_Memory Data_Memory(
+// 	//.clk_i		(clk_i),
+// 	   .data_i     (EX_MEM_writeData_o),
+//     .MemWr_i    (EX_MEM_MemWrite_o),
+//     .MemRe_i    (EX_MEM_MemRead_o),
+//     .Adr_i      (EX_MEM_ALU_data_o),
+//     .data_o     (Data_Memory_data_o)
+// );
 
 Forwarding_Unit Forwarding_Unit(
     .EX_MEM_RegisterRd_i (EX_MEM_RDaddr_o),
@@ -269,6 +290,30 @@ MUX8 MUX8(
     .data_i	({Control_ALUOp_o, Control_ALU_Src_o, Control_RegWrite_o, Control_MemWrite_o, Control_MemRead_o, Control_Mem2Reg_o, Control_Branch_o}),
     .select_i	(HD_mux8_o),
     .data_o	    (MUX8_data_o)
+);
+
+//data cache
+dcache_top dcache
+(
+    // System clock, reset and stall
+    .clk_i(clk_i), 
+    .rst_i(rst_i),
+    
+    // to Data Memory interface     
+    .mem_data_i     (mem_data_i), 
+    .mem_ack_i      (mem_ack_i),  
+    .mem_data_o     (mem_data_o), 
+    .mem_addr_o     (mem_addr_o),    
+    .mem_enable_o   (mem_enable_o), 
+    .mem_write_o    (mem_write_o), 
+    
+    // to CPU interface 
+    .p1_data_i      (EX_MEM_writeData_o), 
+    .p1_addr_i      (EX_MEM_ALU_data_o),   
+    .p1_MemRead_i   (EX_MEM_MemRead_o), 
+    .p1_MemWrite_i  (EX_MEM_MemWrite_o), 
+    .p1_data_o      (Data_Memory_data_o), 
+    .p1_stall_o     (dcache_stall)
 );
 
 endmodule
