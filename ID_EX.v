@@ -30,11 +30,13 @@ module ID_EX(
     RTaddr_i   ,
     RSaddr_o   ,
     RTaddr_o   ,
+
+	stall_i    ,
 );
 
 input                   clk_i;
 input       [1:0]       ALUOp_i;
-input ALUSrc_i, RegWrite_i, MemWrite_i, MemRead_i, Mem2Reg_i, Branch_i;
+input ALUSrc_i, RegWrite_i, MemWrite_i, MemRead_i, Mem2Reg_i, Branch_i, stall_i;
 output reg  [1:0]       ALUOp_o;
 output reg  ALUSrc_o, RegWrite_o, MemWrite_o, MemRead_o, Mem2Reg_o, Branch_o;
 
@@ -57,20 +59,38 @@ input       [4:0]       RSaddr_i, RTaddr_i;
 output reg  [4:0]       RSaddr_o, RTaddr_o;
 
 always @(posedge clk_i) begin
-    ALUOp_o <= ALUOp_i;
-	ALUSrc_o <= ALUSrc_i;
-    RegWrite_o <= RegWrite_i; 
-    MemWrite_o <= MemWrite_i; 
-    MemRead_o <= MemRead_i; 
-    Mem2Reg_o <= Mem2Reg_i;
-    RSdata_o <= RSdata_i;
-    RTdata_o <= RTdata_i;
-    imm_o <= imm_i;
-	funct_o <= funct_i;
-    RDaddr_o <= RDaddr_i;
-    Branch_o <= Branch_i;
-    RSaddr_o <= RSaddr_i;
-    RTaddr_o <= RTaddr_i;
+	if (stall_i == 1'b1) begin
+    	ALUOp_o <= ALUOp_o;
+		ALUSrc_o <= ALUSrc_o;
+    	RegWrite_o <= RegWrite_o; 
+    	MemWrite_o <= MemWrite_o; 
+    	MemRead_o <= MemRead_o; 
+    	Mem2Reg_o <= Mem2Reg_o;
+    	RSdata_o <= RSdata_o;
+    	RTdata_o <= RTdata_o;
+    	imm_o <= imm_o;
+		funct_o <= funct_o;
+    	RDaddr_o <= RDaddr_o;
+    	Branch_o <= Branch_o;
+    	RSaddr_o <= RSaddr_o;
+    	RTaddr_o <= RTaddr_o;
+	end
+	else begin
+    	ALUOp_o <= ALUOp_i;
+		ALUSrc_o <= ALUSrc_i;
+    	RegWrite_o <= RegWrite_i; 
+    	MemWrite_o <= MemWrite_i; 
+    	MemRead_o <= MemRead_i; 
+    	Mem2Reg_o <= Mem2Reg_i;
+    	RSdata_o <= RSdata_i;
+    	RTdata_o <= RTdata_i;
+    	imm_o <= imm_i;
+		funct_o <= funct_i;
+    	RDaddr_o <= RDaddr_i;
+    	Branch_o <= Branch_i;
+    	RSaddr_o <= RSaddr_i;
+    	RTaddr_o <= RTaddr_i;
+	end
 	
 end
 endmodule

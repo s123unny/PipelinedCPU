@@ -63,7 +63,7 @@ IF_ID IF_ID(
     .clk_i      (clk_i),
     .pc_i       (instruction_addr),
     .instr_i    (instruction),
-    .stall_i    (HD_mux8_o),
+    .stall_i    (HD_mux8_o | dcache_stall),
     .flush_i    (HD_flush_o),
     .pc_o       (IF_ID_pc_o),
     .instr_o    (IF_ID_instruction)
@@ -105,7 +105,9 @@ ID_EX ID_EX(
     .RSaddr_i   (IF_ID_instruction[19:15]),
     .RTaddr_i   (IF_ID_instruction[24:20]),
     .RSaddr_o   (ID_EX_RSaddr_o),
-    .RTaddr_o   (ID_EX_RTaddr_o)
+    .RTaddr_o   (ID_EX_RTaddr_o),
+
+	.stall_i    (dcache_stall)
 );
 
 wire [31:0] EX_MEM_ALU_data_o;
@@ -131,7 +133,9 @@ EX_MEM EX_MEM(
     .Zero_o     (EX_MEM_Zero_o),
     .ALU_data_o (EX_MEM_ALU_data_o),
     .writeData_o(EX_MEM_writeData_o),
-    .RDaddr_o   (EX_MEM_RDaddr_o)
+    .RDaddr_o   (EX_MEM_RDaddr_o),
+
+	.stall_i    (dcache_stall)
 );
 
 wire [31:0] Data_Memory_data_o;
@@ -150,7 +154,9 @@ MEM_WB MEM_WB(
     .RDaddr_i   (EX_MEM_RDaddr_o),
     .ReadData_o (MEM_WB_ReadData_o),
     .ALU_data_o (MEM_WB_ALU_data_o),
-    .RDaddr_o   (MEM_WB_RDaddr_o)
+    .RDaddr_o   (MEM_WB_RDaddr_o),
+
+	.stall_i    (dcache_stall)
 );
 
 wire [31:0] Add_PC_data_o;
