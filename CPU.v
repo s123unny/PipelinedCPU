@@ -63,7 +63,7 @@ IF_ID IF_ID(
     .clk_i      (clk_i),
     .pc_i       (instruction_addr),
     .instr_i    (instruction),
-    .stall_i    (HD_mux8_o | dcache_stall),
+    .stall_i    (dcache_stall), //| HD_mux_o
     .flush_i    (HD_flush_o),
     .pc_o       (IF_ID_pc_o),
     .instr_o    (IF_ID_instruction)
@@ -179,8 +179,8 @@ PC PC(
     .clk_i      (clk_i),
     .rst_i      (rst_i),
     .start_i    (start_i),
-    .stall_i    (HD_mux8_o),
-    .pcEnable_i (dcache_stall),
+    .stall_i    (dcache_stall),
+    .pcEnable_i (~HD_mux8_o),
     .pc_i       (MUX_PCSrc_data_o),
     .pc_o       (instruction_addr)
 );

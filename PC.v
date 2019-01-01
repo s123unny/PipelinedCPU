@@ -21,15 +21,17 @@ output	[31:0]		pc_o;
 // Signals
 reg		[31:0]		pc_o;
 
+initial pc_o = 32'b0;
+
 always@(posedge clk_i or negedge rst_i) begin
     if(~rst_i) begin
         pc_o <= 32'b0;
     end
     else begin
-    	if(stall_i) begin
+    	if(stall_i == 1'b1) begin
     	end
-    	else if(start_i)	begin
-    		if( pcEnable_i )
+    	else if(start_i == 1'b1)	begin
+    		if( pcEnable_i == 1'b1 || pcEnable_i == 1'b0)
     			pc_o <= pc_i;
     	end
     	else

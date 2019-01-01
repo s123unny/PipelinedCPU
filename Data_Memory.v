@@ -7,7 +7,8 @@ module Data_Memory
 	enable_i,
 	write_i,
 	ack_o,
-	data_o
+	data_o,
+	count
 );
 
 // Interface
@@ -23,7 +24,7 @@ output	[255:0] data_o;
 
 // Memory
 reg		[255:0]		memory 			[0:511];	//16KB
-reg		[3:0]		  count;
+output reg		[3:0]		  count;
 wire				    ack;
 reg					write_reg;
 reg		[255:0]		data;
@@ -38,6 +39,10 @@ assign	ack_o = ack;
 assign	addr = addr_i>>5;
 assign	data_o = data;
 
+initial state = STATE_IDLE;
+initial count = 4'd0;
+initial write_reg = 0;
+
 //Controller 
 always@(posedge clk_i) begin
 	if(~rst_i) begin
@@ -46,7 +51,7 @@ always@(posedge clk_i) begin
 	else begin
 		case(state) 
 			STATE_IDLE: begin
-				if(enable_i) begin
+				if(enable_i == 1'b1) begin
 					state <= STATE_WAIT;
 				end
 				else begin
@@ -54,7 +59,7 @@ always@(posedge clk_i) begin
 				end
 			end
 			STATE_WAIT: begin
-				if(count == 4'd9) begin	
+				if(count == 4'd7) begin	
 					state <= STATE_IDLE;
 				end
 				else begin
@@ -87,8 +92,7 @@ always@(posedge clk_i) begin
 	end
 end
 
-assign ack = (state == STATE_WAIT) && (count == 4'd9);
-
+assign ack = (state == STATE_WAIT) && (count == 4'd7);
 always@(posedge clk_i) begin
 	if(~rst_i) begin
 		write_reg <= 0;

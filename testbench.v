@@ -42,7 +42,8 @@ Data_Memory Data_Memory
 	.enable_i (cpu_mem_enable),
 	.write_i  (cpu_mem_write),
 	.ack_o    (mem_cpu_ack),
-	.data_o   (mem_cpu_data)
+	.data_o   (mem_cpu_data),
+	.count		()
 );
   
 initial begin
@@ -158,6 +159,41 @@ always@(posedge Clk) begin
 		end
 		flag = 1'b0;
 	end
+
+	$display("cycle %d", counter);
+	$display("[PC]: pc_i=%d, pc_o=%d, stall_i=%b, pcEnable_i=%b, start_i=%b, rst_i=%b", CPU.PC.pc_i, CPU.PC.pc_o, CPU.PC.stall_i, CPU.PC.pcEnable_i, CPU.PC.start_i, CPU.PC.rst_i);
+    $display("[IF_ID]: pc_i=%d, instr_i=%b, flush_i=%b, stall_i=%b", CPU.IF_ID.pc_i, CPU.IF_ID.instr_i, CPU.IF_ID.flush_i, CPU.IF_ID.stall_i);
+	$display("[IF_ID]: pc_o=%d, instr_o=%b", CPU.IF_ID.pc_o, CPU.IF_ID.instr_o);
+	$display("[Control]: ALUOp_o=%d, ALUSrc_o=%d, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d, Mem2Reg_o=%d, Branch_o=%d", CPU.Control.ALUOp_o, CPU.Control.ALUSrc_o, CPU.Control.RegWrite_o, CPU.Control.MemWrite_o, CPU.Control.MemRead_o, CPU.Control.Mem2Reg_o, CPU.Control.Branch_o);
+    $display("[Registers]: RSaddr_i=%d, RTaddr_i=%d, RDaddr_i=%d, RDdata_i=%d, RegWrite_i=%d, RSdata_o=%d, RTdata_o=%d",CPU.Registers.RSaddr_i, CPU.Registers.RTaddr_i, CPU.Registers.RDaddr_i, CPU.Registers.RDdata_i, CPU.Registers.RegWrite_i, CPU.Registers.RSdata_o, CPU.Registers.RTdata_o);
+    $display("[ALU_Control]: funct_i=%b, ALUOp_i=%b, ALUCtrl_o=%b", CPU.ALU_Control.funct_i, CPU.ALU_Control.ALUOp_i, CPU.ALU_Control.ALUCtrl_o);
+	$display("[Sign_Extend]: data_o=%b", CPU.Sign_Extend.data_o);
+	$display("[Add imm]: data1_in=%b, data_o=%b", CPU.Add_imm.data1_in, CPU.Add_imm.data_o);
+	$display("[mux8]: %h", CPU.MUX8.data_o);
+    $display("[ID_EX]: ALUOp_i=%b, ALUSrc_i=%d, RegWrite_i=%d, MemWrite_i=%d, MemRead_i=%d", CPU.ID_EX.ALUOp_i, CPU.ID_EX.ALUSrc_i, CPU.ID_EX.RegWrite_i, CPU.ID_EX.MemWrite_i, CPU.ID_EX.MemRead_i);
+    $display("[ID_EX]: RSdata_i=%d, RTdata_i=%d, RSaddr_i=%d, RTaddr_i=%d, RDaddr_i=%d, imm_i=%d", CPU.ID_EX.RSdata_i, CPU.ID_EX.RTdata_i, CPU.ID_EX.RSaddr_i, CPU.ID_EX.RTaddr_i, CPU.ID_EX.RDaddr_i, CPU.ID_EX.imm_i);
+    $display("[ID_EX]: ALUOp_o=%b, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d", CPU.ID_EX.ALUOp_o, CPU.ID_EX.RegWrite_o, CPU.ID_EX.MemWrite_o, CPU.ID_EX.MemRead_o);
+    $display("[ID_EX]: RSdata_o=%d, RTdata_o=%d, RSaddr_o=%d, RTaddr_o=%d, RDaddr_o=%d", CPU.ID_EX.RSdata_o, CPU.ID_EX.RTdata_o, CPU.ID_EX.RSaddr_o, CPU.ID_EX.RTaddr_o, CPU.ID_EX.RDaddr_o);
+	$display("[MUX_ALUSrcA]: select_i=%d, data1_i=%d, data2_i=%d, data3_i=%d, data_o=%d", CPU.MUX_ALUSrcA.select_i, CPU.MUX_ALUSrcA.data1_i, CPU.MUX_ALUSrcA.data2_i, CPU.MUX_ALUSrcA.data3_i, CPU.MUX_ALUSrcA.data_o);
+    $display("[MUX_ALUSrcB]: select_i=%d, data1_i=%d, data2_i=%d, data3_i=%d, data_o=%d", CPU.MUX_ALUSrcB.select_i, CPU.MUX_ALUSrcB.data1_i, CPU.MUX_ALUSrcB.data2_i, CPU.MUX_ALUSrcB.data3_i, CPU.MUX_ALUSrcB.data_o);
+	$display("[Forwardind]: ForwardA_o=%d, ForwardB_o=%d", CPU.Forwarding_Unit.ForwardA_o, CPU.Forwarding_Unit.ForwardB_o);
+	$display("[ALU]: data1_i=%d, data2_i=%d, ALUCtrl_i=%b, data_o=%d, Zero_o=%d", CPU.ALU.data1_i, CPU.ALU.data2_i, CPU.ALU.ALUCtrl_i, CPU.ALU.data_o, CPU.ALU.Zero_o);
+	$display("[EX_MEM]: ALU_data_i=%d, writeData_i=%d, RDaddr_i=%d, RegWrite_i=%d, MemWrite_i=%d, MemRead_i=%d", CPU.EX_MEM.ALU_data_i, CPU.EX_MEM.writeData_i, CPU.EX_MEM.RDaddr_i, CPU.EX_MEM.RegWrite_i, CPU.EX_MEM.MemWrite_i, CPU.EX_MEM.MemRead_i);
+    $display("[EX_MEM]: ALU_data_o=%d, writeData_o=%d, RDaddr_o=%d, RegWrite_o=%d, MemWrite_o=%d, MemRead_o=%d,", CPU.EX_MEM.ALU_data_o, CPU.EX_MEM.writeData_o, CPU.EX_MEM.RDaddr_o, CPU.EX_MEM.RegWrite_o, CPU.EX_MEM.MemWrite_o, CPU.EX_MEM.MemRead_o);
+	$display("[MEM_WB]: RDaddr_i=%d, RegWrite_i=%d, ReadData_i=%d, ALU_data_o=%d", CPU.MEM_WB.RDaddr_i, CPU.MEM_WB.RegWrite_i, CPU.MEM_WB.ReadData_i, CPU.MEM_WB.ALU_data_i);
+    $display("[MEM_WB]: RDaddr_o=%d, RegWrite_o=%d, ReadData_o=%d, ALU_data_o=%d", CPU.MEM_WB.RDaddr_o, CPU.MEM_WB.RegWrite_o, CPU.MEM_WB.ReadData_o, CPU.MEM_WB.ALU_data_o);
+	$display("");
+	$display("[Data_Memory]: addr_i=%d, enable_i=%b, write_i=%b, ack_o=%d, count=%d", Data_Memory.addr_i, Data_Memory.enable_i, Data_Memory.write_i, Data_Memory.ack_o, Data_Memory.count);
+	$display("[dcache_top]: mem_ack_i=%d, p1_addr_i=%d, p1_MemRead_i=%b, p1_MemWrite_i=%b", CPU.dcache.mem_ack_i, CPU.dcache.p1_addr_i, CPU.dcache.p1_MemRead_i, CPU.dcache.p1_MemWrite_i);
+	$display("[dcache_top]: mem_addr_o=%d, mem_enable_o=%b, mem_write_o=%b, p1_stall_o=%b", CPU.dcache.mem_addr_o, CPU.dcache.mem_enable_o, CPU.dcache.mem_write_o, CPU.dcache.p1_stall_o);
+	$display("Data_Memory_i=%d", Data_Memory.data_i);
+	$display("Data_Memory_o=%d", Data_Memory.data_o);
+	$display("dcache_top: mem_data_i=%d", CPU.dcache.mem_data_i);
+	$display("dcache_top: mem_data_o=%d", CPU.dcache.mem_data_o);
+	$display("dcache_top: p1_data_i=%d", CPU.dcache.p1_data_i);
+	$display("dcache_top: p1_data_o=%d", CPU.dcache.p1_data_o);
+	$display("[dcache_data_sram]: enable_i=%b, data_o=%d", CPU.dcache.dcache_data_sram.enable_i, CPU.dcache.dcache_data_sram.data_o);
+	$display("\n");
 		
 	
 	counter = counter + 1;

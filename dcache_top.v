@@ -123,6 +123,12 @@ assign r_hit_data = (hit)? sram_cache_data:mem_data_i;
 
 integer index;
 
+initial mem_enable = 1'b0;
+initial mem_write = 1'b0;
+initial cache_we = 1'b0;
+initial write_back = 1'b0;
+initial state = STATE_IDLE;
+
 // read data :  256-bit to 32-bit
 always@(p1_offset or r_hit_data) begin
 	//!!! add you code here! (p1_data=...?)
@@ -134,9 +140,11 @@ end
 // write data :  32-bit to 256-bit
 always@(p1_offset or r_hit_data or p1_data_i) begin
 	//!!! add you code here! (w_hit_data=...?)
-  w_hit_data <= r_hit_data;
-	w_hit_data[index+:32] <= p1_data_i;
-
+  if (p1_MemWrite_i) begin
+    index = p1_offset*8;
+    w_hit_data <= r_hit_data;
+	  w_hit_data[index+:32] <= p1_data_i;
+  end
 end
 
 
@@ -191,12 +199,14 @@ always@(posedge clk_i or negedge rst_i) begin
 			end
 			STATE_READMISSOK: begin			//wait for data memory acknowledge
 	                //!!! add you code here! 
+				cache_we <= 1'b0;
 				state <= STATE_IDLE;
 			end
 			STATE_WRITEBACK: begin
 				if(mem_ack_i) begin			//wait for data memory acknowledge
 	                //!!! add you code here! 
-	        cache_we <= 1'b0;
+	      	mem_write <= 1'b0;
+					write_back <= 1'b0;
 
 					state <= STATE_READMISS;
 				end
